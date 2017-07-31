@@ -1,17 +1,23 @@
 const makeStack = () => {
-  let queue = 0;
-  const isEmpty = () => queue === 0;
+  let queue = [];
+  let capacity = 3;
+  const isEmpty = () => queue.length === 0;
+  const setCapacity = (value) => {
+    if (value < 0) throw new Error('accepts only positive capacity');
+    capacity = value;
+  };
   const pop = () => {
-    if (queue === 0) throw new Error('Cannot pop when 0');
-    queue--;
+    if (queue.length === 0) throw new Error('Cannot pop when 0');
+    return queue.pop();
   };
-  const push = () => {
-    if (queue === 3) throw new Error('Cannot exceed 3');
-    queue++;
+  const push = (element) => {
+    if (queue.length === 3) throw new Error('Cannot exceed 3');
+    queue.push(element);
   };
-  const size = () => queue;
+  const size = () => queue.length;
   return {
     isEmpty,
+    setCapacity,
     pop,
     push,
     size
@@ -64,9 +70,21 @@ describe.only('the stack spec', () => {
     }).should.throw('Cannot pop when 0');
   });
 
-  it('pops the same one pushed');
+  it('pops the same one pushed', () => {
+    stack.push('AAA');
+    stack.pop().should.equal('AAA');
+  });
 
-  it('pops the same two pushed');
+  it('pops the same two pushed', () => {
+    stack.push('AAA');
+    stack.push('BBB');
+    stack.pop().should.equal('BBB');
+    stack.pop().should.equal('AAA');
+  });
 
-  it('accepts only positive capacity');
+  it('accepts only positive capacity', () => {
+    (() => {
+          stack.setCapacity(-5);
+        }).should.throw('accepts only positive capacity');
+  });
 });
