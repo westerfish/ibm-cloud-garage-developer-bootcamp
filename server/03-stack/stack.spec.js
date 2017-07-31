@@ -11,7 +11,7 @@ const makeStack = () => {
     return queue.pop();
   };
   const push = (element) => {
-    if (queue.length === 3) throw new Error('Cannot exceed 3');
+    if (queue.length === capacity) throw new Error('Cannot exceed capacity');
     queue.push(element);
   };
   const size = () => queue.length;
@@ -61,7 +61,7 @@ describe.only('the stack spec', () => {
     stack.push();
     (() => {
       stack.push();
-    }).should.throw('Cannot exceed 3');
+    }).should.throw('Cannot exceed capacity');
   });
 
   it('under-flows', () => {
@@ -84,7 +84,7 @@ describe.only('the stack spec', () => {
 
   it('accepts only positive capacity', () => {
     (() => {
-          stack.setCapacity(-5);
+          stack.setCapacity(-3);
         }).should.throw('accepts only positive capacity');
   });
 });
